@@ -1,0 +1,409 @@
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Expense Entry - Admin</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            display: flex;
+            background-color: #E3E2DF;
+            margin: 0;
+            overflow: auto;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 110px;
+            height: 100vh;
+            padding: 0 1.7rem;
+            color: rgb(255, 255, 255);
+            overflow: hidden;
+            transition: all 0.5s linear;
+            background: #5D001E;
+            /* Updated color */
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .sidebar:hover {
+            width: 250px;
+            transition: 0.1s;
+        }
+
+        .logo {
+            height: 80px;
+            padding: 16px;
+        }
+
+        .menu {
+            height: 88%;
+            position: relative;
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu li {
+        padding: 1rem;
+        width: 100%;
+        /* Adjusted width */
+        margin: 8px 0;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        overflow: hidden;
+        /* Hide overflowing text */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+    .menu li:hover,
+    .active {
+        background: #65625d;
+        /* Updated color */
+        transform: scale(1.05);
+    }
+
+    .menu a {
+        color: rgb(255, 255, 255);
+        font-size: 14px;
+        text-decoration: none;
+        display: flex;
+        /* Changed to block */
+        gap: 1.5rem;
+        /* Added padding */
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        overflow: hidden;
+        /* Hide overflowing text */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+    .menu a span {
+        overflow: hidden;
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+        .menu a i {
+            font-size: 1.2rem;
+        }
+
+        .main--content {
+            flex: 1;
+            background: #eeeeee;
+            padding: 1rem;
+            position: relative;
+            z-index: 0;
+            overflow-y: scroll;
+        }
+
+        .header--wrapper img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            /* border-radius: 50%; */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .header--wrapper img:hover {
+            transform: scale(1.2);
+        }
+
+        .header--wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #eeeeee;
+            /* Updated color */
+            border-radius: 10px;
+            padding: 1px 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .header--title {
+            color: #eeeeee;
+        }
+
+        .user--info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #eeeeee;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: none;
+            /* Disable resizing for textarea */
+        }
+
+        button {
+            background-color:#4e4b47;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            cursor: pointer;
+            width:40%;
+        }
+
+        button:hover {
+            background-color:black;
+        }
+
+        /* Specific styles for excluding headings from centering */
+        h2.no-center {
+            text-align: left;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .notification {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Additional styles for disabled buttons */
+        .disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    </style>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Your custom JavaScript -->
+    <script src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.js"></script>
+</head>
+
+
+<body>
+    <div class="sidebar">
+        <div class="logo"></div>
+        <div class="user--info">
+            <div class="search--box"></div>
+        </div>
+
+        <ul class="menu">
+            <li class="active">
+                <a href="{% url 'dash_view' %}">
+                    <i class='bx bxs-home'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Amount Allocation</span>
+                </a>
+                {% else %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Expenses Entry</span>
+                </a>
+                {% endif %}
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'admin_history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>Allocation History</span>
+                </a>
+                {% else %}
+                <a href="{% url 'history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>History</span>
+                </a>
+                {% endif %}
+            </li>
+            {% if user.is_staff %}
+            <li>
+                <a href="{% url 'branch_view' %}">
+                    <i class='bx bxs-user-voice'></i>
+                    <span>Branch Users</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_staff %}
+            <li>
+               <a href="{% url 'register' %}">
+                    <i class='bx bxs-user-plus'></i>
+                    <span>Add branch</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="logout">
+                <a href="{% url 'logout' %}">
+                    <i class='bx bxs-user-x'></i>
+                    <span>Sign Out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main--content">
+        <div class="header--wrapper">
+            <div class="header--title">
+                <div style="background-color: #eeeeee;border-radius: 20px; display: inline-block;">
+                    <a><img src="{% static 'Bootstrap/Image/varasakthi-logo-2.png' %}" style="height: 50px; width: 170px; position: relative; vertical-align: middle;" alt=""></a>
+                </div>
+                <h2 style="display: inline-block;margin-left: 300px; color: #5D001E; vertical-align: middle;text-align: center;">&nbsp;Petty Cash Management System</h2>
+            </div>
+            <div class="user--info">
+                <div class="search--box"></div>
+                <p class="txt" style="color: #5D001E;"><i class='bx bx-user'></i>&nbsp;Welcome, {{ user.username }}!</p>
+            </div>
+        </div>
+    <div style= "width: 90%; background:linear-gradient(to right, #5D001E,#65625d)  ; margin-left: 70px; border-radius: 8px; height: fit-content;">
+    <h1 style="padding: 4px 0px 4px 0px; color:#ddd8d8 ;">Amount Allocation</h1>
+    </div>
+    <form id="admin-entry-form" method="post" action="{% url 'admin_entry' %}" style="font-size:medium;">
+        {% csrf_token %}
+     
+        <!-- Render AdminExpenseForm fields using Django form rendering -->
+        {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% if field.id_for_label == "description" %}
+                <textarea id="{{ field.id_for_label }}" name="{{ field.name }}">{{ field.value }}</textarea>
+            {% else %}
+                {{ field }}
+            {% endif %}
+            <br>
+        {% endfor %}
+        <!-- Submit and Back buttons -->
+        <div style="margin-left:20%;">
+        <button  type="button" id="submit-button"  onclick="submitForm()">Submit</button>
+        <button  id="back-button" onclick="dashView()">Back</button>
+    </div>
+    </form>
+    <!-- Your notification container -->
+    <div id="notification-container"></div>
+
+    <!-- Script for fetching CSRF token -->
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+    </script>
+
+    <!-- Add this script to your Entry.html -->
+   <!-- Add this script to your Entry.html -->
+<script>
+    function submitForm() {
+        save_expense();
+    }
+
+    function dashView() {
+        window.location.href = "{% url 'dash_view' %}";
+    }
+    function logout() {
+        window.history.replaceState({}, document.title, "/");
+        window.location.href = "/";
+    }
+
+    function save_expense() {
+        console.log('Save Expense button clicked.');
+
+        // Replace 'id_capital', 'id_branch', 'id_description' with the actual IDs from your HTML
+        var capital = document.getElementById('id_capital').value;
+        var branch = document.getElementById('id_branch').value;
+        var description = document.getElementById('id_description').value;
+
+        var formData = new FormData(document.getElementById('admin-entry-form'));
+        formData.append('capital', capital);
+        formData.append('branch', branch);
+        formData.append('description', description);
+
+        // if (branch === 'Please select branch') {
+        //     alert('Please select the branch.');
+        //     return;
+        // }
+
+        fetch('/save_expense/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Amount Allocated Successfully!');
+                    dashView();  // Redirect to dash_view after successful save
+                } else {
+                    console.error('Error:', data.errors || data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+</body>
+</html>

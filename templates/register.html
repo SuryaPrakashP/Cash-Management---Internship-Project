@@ -1,0 +1,268 @@
+{% extends "index.html" %}
+{% load static %}
+{% block title %}
+Registration
+{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<style>
+    .container-fluid {
+        margin-left: 34%;
+        width: 1000px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+        display: flex;
+        background-color: #E3E2DF;
+        margin: 0;
+        overflow: auto;
+        font-size: smaller;
+    }
+
+    #cont {
+
+        background-color: #eeeeee;
+        margin: 0;
+        overflow: auto;
+        font-size: smaller;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 110px;
+        height: 100vh;
+        padding: 0 1.7rem;
+        color: rgb(255, 255, 255);
+        overflow: hidden;
+        transition: all 0.5s linear;
+        background: #5D001E;
+        /* Updated color */
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+        z-index: 1;
+    }
+
+    .sidebar:hover {
+        width: 290px;
+        transition: 0.5s;
+    }
+
+    .logo {
+        height: 80px;
+        padding: 16px;
+    }
+
+    .menu {
+        height: 88%;
+        position: relative;
+        list-style: none;
+        padding: 0;
+    }
+
+    .menu li {
+        padding: 1rem;
+        width: 100%;
+        /* Adjusted width */
+        margin: 8px 0;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        overflow: hidden;
+        /* Hide overflowing text */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+    .menu li:hover,
+    .active {
+        background: #65625d;
+        /* Updated color */
+        transform: scale(1.05);
+    }
+
+    .menu a {
+        color: rgb(255, 255, 255);
+        font-size: 14px;
+        text-decoration: none;
+        display: flex;
+        /* Changed to block */
+        gap: 1.5rem;
+        /* Added padding */
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        overflow: hidden;
+        /* Hide overflowing text */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+    .menu a span {
+        overflow: hidden;
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        text-overflow: ellipsis;
+        /* Add ellipsis for long text */
+    }
+
+    .menu a i {
+        font-size: 1.2rem;
+    }
+
+    .main--content {
+        flex: 1;
+        background: #eeeeee;
+        padding: 1rem;
+        position: relative;
+        z-index: 0;
+        overflow-y: scroll;
+        overflow-x: scroll;
+        overflow: hidden;
+
+    }
+
+    .header--wrapper img {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        /* border-radius: 50%; */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .header--wrapper img:hover {
+        transform: scale(1.2);
+    }
+
+    .header--wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        background: #eeeeee;
+        /* Updated color */
+        border-radius: 10px;
+        padding: 20px 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .header--title {
+        color: #eeeeee;
+    }
+
+    .user--info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #eeeeee;
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 28px;
+    }
+</style>
+<div class="sidebar">
+    <div class="logo"></div>
+    <div class="user--info">
+        <div class="search--box"></div>
+    </div>
+    <ul class="menu">
+        <li class="active">
+            <a href="{% url 'dash_view' %}">
+                <i class='bx bxs-home'></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            {% if user.is_staff %}
+            <a href="{% url 'entry_page' %}">
+                <i class='bx bx-money-withdraw'></i>
+                <span>Amount Allocation</span>
+            </a>
+            {% else %}
+            <a href="{% url 'entry_page' %}">
+                <i class='bx bx-money-withdraw'></i>
+                <span>Expenses Entry</span>
+            </a>
+            {% endif %}
+        </li>
+        <li>
+            {% if user.is_staff %}
+            <a href="{% url 'admin_history' %}">
+                <i class='bx bxs-wallet-alt'></i>
+                <span> History</span>
+            </a>
+            {% else %}
+            <a href="{% url 'history' %}">
+                <i class='bx bxs-wallet-alt'></i>
+                <span>History</span>
+            </a>
+            {% endif %}
+        </li>
+        {% if user.is_staff %}
+        <li>
+            <a href="{% url 'branch_view' %}">
+                <i class='bx bxs-user-voice'></i>
+                <span>Branch Users</span>
+            </a>
+        </li>
+        {% endif %}
+        {% if user.is_staff %}
+        <li>
+           <a href="{% url 'register' %}">
+                <i class='bx bxs-user-plus'></i>
+                <span>Add branch</span>
+            </a>
+        </li>
+        {% endif %}
+        <li class="logout">
+            <a href="{% url 'logout' %}">
+                <i class='bx bxs-user-x'></i>
+                <span>Sign Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="main--content">
+    <div class="header--wrapper">
+        <div class="header--title">
+            <div style="background-color: #eeeeee;border-radius: 20px; display: inline-block;">
+                <a><img src="{% static 'Bootstrap/Image/varasakthi-logo-2.png' %}" style="height: 50px; width: 170px; position: relative; vertical-align: middle;" alt=""></a>
+            </div>
+            <h2 style="display: inline-block;margin-left: 300px; color: #5D001E; vertical-align: middle;text-align: center;">&nbsp;Petty Cash Management System</h2>
+        </div>
+        <div class="user--info">
+            <div class="search--box"></div>
+            <p class="txt" style="color: #5D001E;"><i class='bx bx-user'></i>&nbsp;Welcome, {{ user.username }}!</p>
+        </div>
+    </div>
+    <!-- <div style= "width: 90%; background:linear-gradient(to right, #5D001E,#65625d)  ; margin-left: 70px; border-radius: 8px; height: fit-content;">
+    <h1 style="padding: 4px 0px 4px 0px; color:#ddd8d8 ;">Amount Allocated History</h1>
+</div> -->
+<div class="container-fluid" style="display: inline-block;">
+    <div class="col-md-offset-1 col-md-5"> <!-- Adjusted grid classes -->
+        <h2 class="text-primary page-header text-center">New Branch Registration</h2>
+    </div>
+    <div class="col-md-offset-1 col-md-5 well"> <!-- Adjusted grid classes -->
+        <form method="POST" autocomplete="off" action="">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Register</button>  <button type="button" onclick="dashView()"  class="btn btn-secondary">Back</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

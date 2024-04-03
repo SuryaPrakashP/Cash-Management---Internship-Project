@@ -1,0 +1,35 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"></script>
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    
+</head>
+
+<body>
+    {% block content %}
+
+    {% endblock %}
+
+    <script>
+        $(document).ready(function () {
+            $(".alert").hide(4000);
+        });
+        function logout() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/";
+        }
+        function dashView() {
+        window.location.href = "{% url 'dash_view' %}";
+    }z
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Details</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+
+    <!-- Add your custom CSS styles here -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+    
+        body {
+            display: flex;
+            background-color: #E3E2DF;
+            margin: 0;
+            overflow: auto;
+            font-size: smaller;
+        }
+    
+        .sidebar {
+            position: sticky;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 110px;
+            height: 100vh;
+            padding: 0 1.7rem;
+            color: rgb(255, 255, 255);
+            overflow: hidden;
+            transition: all 0.5s linear;
+            background: #5D001E;
+            /* Updated color */
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+    
+        .sidebar:hover {
+            width: 290px;
+            transition: 0.5s;
+        }
+    
+        .logo {
+            height: 80px;
+            padding: 16px;
+        }
+    
+        .menu {
+            height: 88%;
+            position: relative;
+            list-style: none;
+            padding: 0;
+        }
+    
+        .menu li {
+            padding: 1rem;
+            width: 100%;
+            /* Adjusted width */
+            margin: 8px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing text */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+    
+        .menu li:hover,
+        .active {
+            background: #65625d;
+            /* Updated color */
+            transform: scale(1.05);
+        }
+    
+        .menu a {
+            color: rgb(255, 255, 255);
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            /* Changed to block */
+            gap: 1.5rem;
+            /* Added padding */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing text */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+    
+        .menu a span {
+            overflow: hidden;
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+    
+        .menu a i {
+            font-size: 1.2rem;
+        }
+    
+        .main--content {
+            flex: 1;
+            background: #eeeeee;
+            padding: 1rem;
+            position: relative;
+            z-index: 0;
+            overflow-y: scroll;
+        }
+    
+        .header--wrapper img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            /* border-radius: 50%; */
+            transition: all 0.3s ease-in-out;
+        }
+    
+        .header--wrapper img:hover {
+            transform: scale(1.2);
+        }
+    
+        .header--wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #eeeeee;
+            /* Updated color */
+            border-radius: 10px;
+            padding: 20px 2rem;
+            margin-bottom: 1rem;
+        }
+    
+        .header--title {
+            color: #eeeeee;
+        }
+    
+        .user--info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #eeeeee;
+        }
+    
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 25px;
+        }
+    
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+    
+        th,
+        td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+            color: #000000;
+        }
+    
+        th {
+            background-color: #5D001E;
+            color: #E3E2DF;
+        }
+    
+        .branchh2 {
+            color: #00adb5;
+            margin-top: 90px;
+            font-size: 20px;
+        }
+    
+        .back-button {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10%;
+            background-color: #EE4C7C;
+            color: #ffffff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+        }
+    
+        .back-button:hover {
+            background-color: #9A1750;
+        }
+    
+        #notification {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        #save-button1 {
+            width: 10%;
+            align-items: center;
+        }
+    
+        #notification {
+            text-align: center;
+            margin-top: 20px;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: fit-content;
+            padding: 10px;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+    
+        #save-button1 {
+            width: 10%;
+            align-items: center;
+        }
+    </style>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Your custom JavaScript -->
+    <script src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.js"></script>
+</head>
+
+<body>
+    <div id="notification"></div>
+    <div class="sidebar">
+        <div class="logo"></div>
+        <div class="user--info">
+            <div class="search--box"></div>
+        </div>
+
+        <ul class="menu">
+            <li class="active">
+                <a href="{% url 'dash_view' %}">
+                    <i class='bx bxs-home'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Amount Allocation</span>
+                </a>
+                {% else %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Expenses Entry</span>
+                </a>
+                {% endif %}
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'admin_history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>Allocation History</span>
+                </a>
+                {% else %}
+                <a href="{% url 'history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>History</span>
+                </a>
+                {% endif %}
+            </li>
+            {% if user.is_staff %}
+            <li>
+                <a href="{% url 'branch_view' %}">
+                    <i class='bx bxs-user-voice'></i>
+                    <span>Expenes history</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_staff %}
+            <li>
+               <a href="{% url 'register' %}">
+                    <i class='bx bxs-user-plus'></i>
+                    <span>Add branch</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="logout">
+                <a href="{% url 'logout' %}">
+                    <i class='bx bxs-user-x'></i>
+                    <span>Sign Out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="main--content">
+        <div class="header--wrapper">
+            <div class="header--title">
+                <div style="background-color: #eeeeee;border-radius: 20px; display: inline-block;">
+                    <a><img src="{% static 'Bootstrap/Image/varasakthi-logo-2.png' %}" style="height: 50px; width: 170px; position: relative; vertical-align: middle;" alt=""></a>
+                </div>
+                <h2 style="display: inline-block;margin-left: 300px; color: #5D001E; vertical-align: middle;text-align: center;">&nbsp;Petty Cash Management System</h2>
+            </div>
+            <div class="user--info">
+                <div class="search--box"></div>
+                <p class="txt" style="color: #5D001E;"><i class='bx bx-user'></i>&nbsp;Welcome, {{ user.username }}!</p>
+            </div>
+        </div>
+        <div style= "width: 90%; background:linear-gradient(to right, #5D001E,#65625d)  ; margin-left: 70px; border-radius: 8px; height: fit-content;">
+        <h1 style="padding: 4px 0px 4px 0px; color:#ddd8d8 ;">Amount Allocated History</h1>
+    </div>
+    <div class="row" style="margin-right: -120px;margin-left: 365px;">
+        <div class="col-md-2">
+            <input class="form-control" style="width: 100%;" type="text" id="filterInput1" placeholder="Search">
+        </div>
+        <div class="col-md-1">
+            <label class="control-label" style="margin-top: 10px;" for="status">Status</label>
+        </div>
+        <div class="col-md-2">
+            <select class="form-select" name="cars" id="cars">
+                <option selected value="0">select status</option>
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+              </select>
+            <!-- <input class="form-control" style="width: 100%;" type="text" id="filterInput2" placeholder="Status"> -->
+        </div>
+        <div class="col-md-1">
+            <label class="control-label" style="margin-top: 10px;" for="status">Branch</label>
+        </div>
+        <div class="col-md-2">
+            <select class="form-select" name="user" id="branch">
+                <option selected value="0">Select Branch</option>
+                {% for branch_user in regular_users %}
+                <option value="{{ branch_user.username }}">{{ branch_user.username }}</option>
+                {% endfor %}
+            </select>
+            <!-- <input class="form-control" style="width: 100%;" type="text" id="filterInput2" placeholder="Status"> -->
+        </div>
+    </div>
+    <div class="row date-filter" style="margin-right: -32px;margin-left: 272px; margin-top: 10px;">
+        <div class="col-md-1">
+            <label class="control-label" style="margin-top: 10px;" for="start-date">Start Date:</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="date" id="start-date" name="start-date">
+        </div>
+        <div class="col-md-1">
+            <label class="control-label" style="margin-top: 10px;" for="end-date">End Date:</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="date" id="end-date" name="end-date">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" style="background-color: #5D001E;" id="filter-button">Get Data</button>
+        </div>
+    </div>
+    
+    <!-- <div>
+        <input class="form-control" style="margin-left: 900px; width: 210px;" type="text" id="filterInput" placeholder="Search for Date...">
+    </div> -->
+    
+        {% if regular_users %}
+        {% for user in regular_users %}
+            <div>
+                <h2 class="branchh2"
+                    style="background:linear-gradient(to right, #5D001E,#65625d); padding: 5px; text-align: center; color: #ffffff; border: 2px solid; width:fit-content;margin-top: 20px; margin-left: 45%; border-radius: 6px;">
+                    {{ user.username }}
+                </h2>
+                    
+                    <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Created_At</th>
+                            <th>Branch</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Bill</th>
+                            <th>Status</th>
+                            <th>Approval Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user_expense in user_expenses%}
+                        {% if user_expense.user == user %}
+                            <tr>
+                                <td style="width: 17%;">{{ user_expense.created_at|date:"d-m-Y" }}</td>
+                                <td >{{ user_expense.user.username }}</td>
+                                <td id="amountCell{{ user_expense.id }}">{{ user_expense.amount }}</td>
+                                <td style="white-space: pre-wrap;">{{ user_expense.description }}</td>
+                                <td style="width: 10%;">
+                                    {% if user_expense.bill %}
+                                    <button class="btn" style="background-color: #5D001E;color: #eeeeee;" onclick="openImagePopup('{{ user_expense.bill.url }}')">View Bill</button>
+                                    {% else %}
+                                        No Bill
+                                    {% endif %}
+                                </td>
+                                <!-- ... other table rows ... -->
+                                <td id="statusCell{{ user_expense.id }}">
+                                    {% if user_expense.ticket_amount > 0 %}
+                                        Approved
+                                    {% else %}
+                                        Approve
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.user.is_staff %}
+                                        <div style="display: flex; align-items: center;">
+                                            <input class="form-control" style="width: 120px; margin-right: 5px;" type="number" id="ticketInput{{ user_expense.id }}"
+                                                value="{{ user_expense.ticket_amount }}" {% if user_expense.is_submitted %}disabled{% endif %}>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn" onclick="submitTicketAmount('{{ user_expense.id }}', event)"
+                                                    style="color:white; background-color: #5D001E;">
+                                                {% if user_expense.ticket_amount > 0 %}
+                                                    Approved
+                                                {% else %}
+                                                    Approve
+                                                {% endif %}
+                                            </button>
+                                        </div>
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">N/A</td>
+                        </tr>
+                    {% endfor %}            
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+        {% else %}
+            <p>No regular users and their expenses available.</p>
+        {% endif %}
+   
+    <!-- ... previous HTML code ... -->
+    
+    <script>
+        function openImagePopup(imageUrl) {
+            var popupWindow = window.open("", "_blank", "width=600,height=400");
+            popupWindow.document.write("<img src='" + imageUrl + "' style='max-width:100%; max-height:100%;' />");
+        }
+
+        $(document).ready(function () {
+            $("#filterInput1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#filter-button').click(function () {
+                var startDate = $('#start-date').val();
+                var endDate = $('#end-date').val();
+                var branch = $('#branch').val();
+                var status = $('#cars').val(); // Corrected selector for getting the selected option value
+                if (status === '0') {
+                    alert('Please select Status');
+                    return;
+                }
+                if (branch === '0') {
+                    alert('Please select Branch Name');
+                    return;
+                }
+                if (startDate === '' || endDate === '') {
+                    alert('Please select both start and end dates.');
+                    return;
+                }
+                if (new Date(startDate) > new Date(endDate)) {
+                    alert('End date must be after start date.');
+                    return;
+                }
+                filterExpenses(startDate, endDate, status, branch);
+            });
+        });
+
+        function filterExpenses(startDate, endDate, status, branch) {
+            var anyDataFound = false; // Initialize the flag to track if any data is found
+
+            $('tbody tr').each(function () {
+                var expenseDate = $(this).find('td:first-child').text();
+                var expenseStatus = $(this).find('td:nth-child(6)').text();
+                var expenseBranch = $(this).find('td:nth-child(2)').text();
+                var expenseDateObj = new Date(expenseDate.split('-').reverse().join('-'));
+                if ((expenseDateObj >= new Date(startDate)) && (expenseDateObj <= new Date(endDate)) && (status === '' || expenseStatus === status) && (branch === '' || expenseBranch === branch)) {
+                    $(this).show();
+                    anyDataFound = true; // Set the flag to true if any data is found
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // Show alert if no data is found
+            if (!anyDataFound) {
+                alert('No data found.'); // Display alert message
+            }
+        }
+
+    </script>
+    
+
+    <script>
+        // Function to initialize the status based on the stored data
+        function logout() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/";
+        }
+    function initializeStatus() {
+        document.querySelectorAll('[id^="statusCell"]').forEach(function (statusCell) {
+            var expenseId = statusCell.id.replace('statusCell', '');
+            
+            // Fetch the status from the backend or any storage mechanism you are using
+            // For demonstration purposes, I'm using localStorage here
+            var storedStatus = localStorage.getItem('status' + expenseId);
+
+            // Set the initial status to "Pending" if not stored, otherwise set the stored status
+            statusCell.textContent = storedStatus ? storedStatus : 'Pending';
+        });
+    }
+
+    function submitTicketAmount(expenseId) {
+        event.preventDefault();
+        console.log('Submitting ticket amount for expenseId:', expenseId);
+
+        var ticketInput = document.getElementById('ticketInput' + expenseId);
+        var statusCell = document.getElementById('statusCell' + expenseId);
+
+        if (!ticketInput || ticketInput.disabled || !statusCell) {
+            console.error('Input element not found or already disabled');
+            return;
+        }
+
+        var ticketAmount = ticketInput.value;
+
+        if (ticketAmount === 'None') {
+            console.error('Ticket amount is "None". Please enter a valid number.');
+            return;
+        }
+
+        ticketAmount = parseFloat(ticketAmount);
+
+        if (isNaN(ticketAmount)) {
+            console.error('Invalid ticket amount:', ticketInput.value);
+            return;
+        }
+
+        ticketInput.disabled = true;
+
+        // Assuming this is where you make the backend submission
+        fetch('/update_amount/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                expense_id: expenseId,
+                ticket_amount: ticketAmount,
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Server Response:', data);
+            if (data.success) {
+                updateStatus(expenseId, 'Approved');
+                showNotification('Amount Approved updated successfully', true);
+
+                // Store the status in localStorage
+                localStorage.setItem('status' + expenseId, 'Approved');
+                // Store disabled state in local storage
+                localStorage.setItem('frozenTicketInput' + expenseId, true);
+            } else {
+                showNotification('Failed to update ticket amount. Please try again.', false);
+                console.error('Error:', data.error || 'Failed to update ticket amount.');
+                ticketInput.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showNotification('An error occurred. Please try again.', false);
+            ticketInput.disabled = false;
+        });
+    }
+
+   // Add this function to display a notification
+function showNotification(message, isSuccess) {
+    var notificationDiv = document.getElementById('notification');
+
+    if (notificationDiv) {
+        // Set background color
+        notificationDiv.style.backgroundColor = isSuccess ? '#00FF00' : '#FF0000';
+
+        // Set text content
+        notificationDiv.textContent = message;
+        notificationDiv.style.color = 'black';
+        notificationDiv.style.backgroundColor = '#a2a8a2'
+
+        // Automatically hide the notification after 3 seconds
+        setTimeout(function () {
+            // Reset background color and clear text content
+            notificationDiv.style.backgroundColor = '';
+            notificationDiv.textContent = '';
+        }, 3000);
+    }
+}
+
+
+    function applyFrozenState() {
+        document.querySelectorAll('[id^="ticketInput"]').forEach(function (ticketInput) {
+            var expenseId = ticketInput.id.replace('ticketInput', '');
+
+            // Check if the input is frozen in local storage
+            if (localStorage.getItem('frozenTicketInput' + expenseId)) {
+                ticketInput.disabled = true;
+            }
+        });
+    }
+
+    // Apply frozen state on page load
+    applyFrozenState();
+
+    function updateStatus(expenseId, status) {
+        var statusCell = document.getElementById('statusCell' + expenseId);
+
+        if (statusCell) {
+            statusCell.textContent = status;
+        }
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Initialize the status on page load
+    initializeStatus();
+    </script>
+    </script>
+
+</body>
+
+</html>

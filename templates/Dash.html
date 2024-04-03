@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #E3E2DF;
+            margin: 0;
+            overflow: auto;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 110px;
+            height: 100vh;
+            padding: 0 1.7rem;
+            color: rgb(255, 255, 255);
+            overflow: hidden;
+            transition: all 0.5s linear;
+            background: #5D001E;
+            /* Updated color */
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .sidebar:hover {
+            width: 290px;
+            transition: 0.5s;
+        }
+
+        .logo {
+            height: 80px;
+            padding: 16px;
+        }
+
+        .menu {
+            height: 88%;
+            position: relative;
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu li {
+            padding: 1rem;
+            width: 100%;
+            /* Adjusted width */
+            margin: 8px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing text */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+
+        .menu li:hover,
+        .active {
+            background: #65625d;
+            /* Updated color */
+            transform: scale(1.05);
+        }
+
+        .menu a {
+            color: rgb(255, 255, 255);
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            /* Changed to block */
+            gap: 1.5rem;
+            /* Added padding */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing text */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+
+        .menu a span {
+            overflow: hidden;
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+        }
+
+        .menu a i {
+            font-size: 1.2rem;
+        }
+
+        .main--content {
+            flex: 1;
+            background: #eeeeee;
+            padding: 1rem;
+            position: relative;
+            z-index: 0;
+            overflow-y: scroll;
+        }
+
+        .header--wrapper img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            /* border-radius: 50%; */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .header--wrapper img:hover {
+            transform: scale(1.2);
+        }
+
+        .header--wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #eeeeee;
+            /* Updated color */
+            border-radius: 10px;
+            padding: 20px 2rem;
+            margin-bottom: 1rem;
+
+        }
+
+        .header--title {
+            color: #eeeeee;
+        }
+
+        .user--info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #eeeeee;
+        }
+
+        .card--container {
+            background-color: #393e46;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .card--wrapper {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .main--title {
+            color: #eeeeee;
+            padding-bottom: 10px;
+            font-size: 15px;
+
+        }
+
+        .Title {
+            background: #E3AFBC;
+            /* Updated color */
+            border-radius: 10px;
+            padding: 1.2rem;
+            width: 290px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.5s ease-in-out;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .Title:hover {
+            transform: translateY(-5px);
+        }
+
+        .Amount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .Data {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .Branch {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .amount--value {
+            font-size: 18px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+        }
+
+        .Location {
+            position: absolute;
+            margin-right: 10px;
+            margin-top: 80px;
+            color: #eeeeee;
+        }
+
+        .saved-expense-box {
+            background-color: #ffffff;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            display: inline-block;
+            flex-wrap: nowrap;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            font-size: 25px;
+        }
+
+        .inner-box {
+            background-color: #393e46;
+            padding: 20px;
+            border-radius: 8px;
+            margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .expense-details h3 {
+            margin: 0;
+            margin-right: 50px;
+            color: #ffffff;
+            margin-left: 65px;
+            margin-top: 3px;
+            display: inline-block;
+            width: 70%;
+
+        }
+
+        .summary {
+            display: inline;
+            width: 180px;
+            color: #ffffff;
+            padding-left: 10px;
+            margin: 0px;
+
+        }
+
+        .table {
+            color: #ffffff;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #393e46;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            margin-bottom: 20px;
+
+        }
+
+        .table th,
+        .table td {
+            border: 2px solid #0f0f0f;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #5D001E;
+            color: #ffffff;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .inner-box {
+            margin-left: 30px;
+            display: inline-block;
+            color: #ffffff;
+            margin-bottom: 20px;
+            margin-top: 25px;
+        }
+
+        .inner-box h2 {
+            color: #ffffff;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+</head>
+
+<body>
+    {% if request.user.is_authenticated %}
+    <div class="sidebar">
+        <div class="logo"></div>
+        <div class="user--info">
+            <div class="search--box"></div>
+        </div>
+
+        <ul class="menu">
+            <li class="active">
+                <a href="#">
+                    <i class='bx bxs-home'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Amount Allocation</span>
+                </a>
+                {% else %}
+                <a href="{% url 'entry_page' %}">
+                    <i class='bx bx-money-withdraw'></i>
+                    <span>Expenses Entry</span>
+                </a>
+                {% endif %}
+            </li>
+            <li>
+                {% if user.is_staff %}
+                <a href="{% url 'admin_history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>Allocation History</span>
+                </a>
+                {% else %}
+                <a href="{% url 'history' %}">
+                    <i class='bx bxs-wallet-alt'></i>
+                    <span>Expense History</span>
+                </a>
+                {% endif %}
+            </li>
+            {% if user.is_staff %}
+            <li>
+                <a href="{% url 'branch_view' %}">
+                    <i class='bx bxs-user-voice'></i>
+                    <span>Branch Users</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_staff %}
+            <li>
+                <a href="{% url 'register' %}">
+                    <i class='bx bxs-user-plus'></i>
+                    <span>Add branch</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="logout">
+                <a href="{% url 'logout' %}">
+                    <i class='bx bxs-user-x'></i>
+                    <span>Sign Out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main--content">
+        <div class="header--wrapper">
+            <div class="header--title">
+                <div style="background-color: #eeeeee;border-radius: 20px; display: inline-block;">
+                    <a><img src="{% static 'Bootstrap/Image/varasakthi-logo-2.png' %}"
+                            style="height: 50px; width: 170px; position: relative; vertical-align: middle;" alt=""></a>
+                </div>
+                <h2
+                    style="display: inline-block;margin-left: 300px; color: #5D001E; vertical-align: middle;text-align: center;">
+                    &nbsp;Petty Cash Management System</h2>
+            </div>
+            <div class="user--info">
+                <div class="search--box"></div>
+                <p class="txt" style="color: #5D001E;"><i class='bx bx-user'></i>&nbsp;Welcome, {{ user.username }}!</p>
+            </div>
+        </div>
+        <div
+            style="width: 90%; background:linear-gradient(to right, #5D001E,#65625d)  ; margin-left: 70px; border-radius: 8px; height: fit-content;">
+            <h1 style="padding: 4px 0px 4px 0px; color:#ddd8d8 ;">Dashboard View</h1>
+        </div>
+
+        {% if user.is_staff %}
+        <div class="expense-details"
+            style="display:inline-block; width:50%; border-radius: 10px; box-shadow: 10px #393e46; padding: 15px;">
+            <h2 class="summary"
+                style="color: #F9F3F3; border-radius: 4px; background: linear-gradient(to right, #5D001E, #65625d); margin-bottom: 15px;padding-right: 10px;">
+                Branch Users Summary
+            </h2>
+            <div class="table-container" style="overflow-x: auto;">
+                <table class="table"
+                    style="width: 100%; border-collapse: collapse; overflow: hidden; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Allocated Amount</th>
+                            <th>Utilized Amount</th>
+                            <th>Remaining Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for branch_summary_item in branch_summary %}
+                        <tr>
+                            <td>{{ branch_summary_item.branch_username }}</td>
+                            <td>₹{{ branch_summary_item.allocated_capital }}</td>
+                            <td>₹{{ branch_summary_item.utilized_amount }}</td>
+                            <td>₹{{ branch_summary_item.remaining_amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if not user.is_staff %}
+        <div class="expense" style="width: 100%;">
+            <div class="expense-details"
+                style="padding: 7px; display: flex; flex-direction: row; border: 1px solid #5D001E; border-radius: 10px;margin-bottom: 12px; background-color: #4b4949;">
+                {% if allocated_capital %}
+                <h3 style="padding-right: 10px; color: #ffffff;">Allocated Amount: ₹{{ allocated_capital }}</h3>
+                {% else %}
+                <h3 style="padding-right: 10px; color: #ffffff;">You have not been allocated any capital yet.</h3>
+                {% endif %}
+                <h3 style="padding-right: 10px; color: #ffffff;">Utilized Amount: ₹{{ utilized_by_branch }}</h3>
+                <h3 id="remainingAmount" style="color: #ffffff;">Remaining Amount: ₹{{ remaining_amount }}</h3>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user.is_staff %}
+        <div class="inner-box"
+            style="color: #ffffff; padding: 20px; background-color: rgba(0, 0, 0, 0.6); border-radius: 10px;  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); position: relative; top: -70px;">
+            <div class="amount">
+                <h3>Total Amount: ₹{{ total_capital_amount|default:"0" }}</h3>
+            </div>
+            <div style="padding-top: 10px;">
+                <h3>Branch Count: {{ total_users }}</h3><!-- Display total user count -->
+            </div>
+        </div>
+        {% endif %}
+
+
+
+        {% if not user.is_staff %}
+        <h2 style="margin-left:10px; color: #333;">Latest Expenses</h2>
+        <div class="latest-expenses-box">
+            <div class="card--wrapper">
+                {% for expense in latest_expenses|slice:":5" %}
+                <div class="saved-expense-box" style="width:fit-content; background-color: #E3E2DF;">
+                    <div class="Amount">
+                        <span class="amount--value" style="color: #333;">₹{{ expense.amount }}</span>
+                        {% if expense.ticket_amount > 0 %}
+                        <span class="amount--value" style="color: #333;"><i style="color: #4CAF50;font-size: 24px;"
+                                class="bi bi-check-all"></i>Approved</span>
+                        {% else %}
+                        <span class="amount--value" style="color: #333;"><i style="font-size: 24px;"
+                                class="bi bi-check"></i>Pending</span>
+                        {% endif %}
+                    </div>
+                    <div class="Data">
+                        <p class="Description" style="color: #333;"><b>User:</b> {{ expense.description }}</p>
+                        <p class="Category" style="color: #333;"><b>Category: </b>{{ expense.category }}</p>
+                        <p class="created-at" style="color: #333;"><b>Expense Date:</b>{{ expense.created_at|date:"d-m-Y h:iA" }}</p>
+                        {% if expense.ticket_amount > 0 %}
+                        <p class="Description" style="color: #333;"><b>Approved Amount:</b> {{ expense.ticket_amount }}
+                        </p>
+                        {% else %}
+
+                        {% endif %}
+
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
+    <script>
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if this cookie string begins with the name we want
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Add this code inside the success block of submitTicketAmount function in branch.html
+        fetch('/update_remaining_amount/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                branch_username: '{{ user.username }}',
+                deducted_amount: ticketAmount,  // Assuming ticketAmount is defined in branch.html
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Remaining Amount Response:', data);
+                if (data.success) {
+                    // Update the remaining amount on the page
+                    document.getElementById('remainingAmount').textContent = data.remaining_amount;
+                } else {
+                    console.error('Failed to update remaining amount:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+            });
+
+
+        function logout() {
+            window.history.replaceState({}, document.title, "/");
+            window.location.href = "/";
+        }
+        function submitStatus(expenseId, username) {
+            // Retrieve the input value
+            var statusInput = document.getElementById('statusInput' + expenseId);
+            var statusValue = statusInput.value;
+
+            // Send a request to update the status and remaining amount
+            fetch('/update_status/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'expense_id=' + encodeURIComponent(expenseId) + '&status=' + encodeURIComponent(statusValue),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the status cell in the table
+                        var statusCell = document.getElementById('statusInput' + expenseId);
+                        statusCell.textContent = statusValue;
+
+                        // Update the remaining amount for the user
+                        var remainingAmountCell = document.getElementById('remainingAmountCell' + username);
+                        remainingAmountCell.textContent = data.remaining_amount;
+                    } else {
+                        console.error('Error:', data.error || 'Failed to update status.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+</body>
+
+</html>
